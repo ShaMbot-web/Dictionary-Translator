@@ -1,267 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>🌍 ShaMbot Translator</title>
+<meta charset="utf-8" />
+<title>🌍 ShaMbot Translator — Full DB + Student Names</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <style>
-body {
-  font-family: "Segoe UI", Arial, sans-serif;
-  margin: 0;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-image: url('background.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
+  :root { --panel-bg: rgba(255,255,255,0.98); --panel-text:#111; }
 
-.container {
-  background: rgba(0,0,0,0.7);
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-  width: 500px;
-  text-align: center;
-  max-height: 90vh;
-  overflow-y: auto;
-  color: #fff;
-}
+  html,body {
+    height:100%;
+    margin:0;
+    font-family:"Segoe UI",Arial,sans-serif;
+    background:#111;
+  }
 
-h1 {
-  margin-bottom: 20px;
-  font-size: 22px;
-  color: #ffb6c1;
-}
+  /* ✅ Fixed: use background-image instead of background-video */
+  body {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    background-image: url('bg9.jpg'); /* ← change this to your image file */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
 
-input {
-  width: 70%;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-}
+  .container{
+    width:560px; max-width:calc(100% - 48px); max-height:92vh; overflow:auto;
+    border-radius:14px; box-shadow:0 0 40px rgba(0,0,0,0.6); padding:28px;
+    color:#fff; position:relative; text-align:center;
+    background-image:url('https://wallpapercave.com/wp/wp9822772.jpg');
+    background-size:cover; background-position:center; background-repeat:no-repeat;
+  }
 
-.btn-container {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-}
+  h1{ margin:0 0 12px 0; font-size:22px; color:#ffb6c1; }
 
-button {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 8px;
-  color: #fff;
-  font-size: 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: 0.3s;
-}
+  #wordInput{
+    width:72%; max-width:380px; padding:10px 12px; border-radius:10px;
+    border:1px solid rgba(255,255,255,0.15); outline:none; font-size:15px; color:#111;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+  }
+  #wordInput::placeholder{ color:rgba(0,0,0,0.45); }
 
-.search-btn { background: #4facfe; }
-.search-btn:hover { background: #007bff; }
+  .btn-container{ margin-top:12px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap; align-items:center; }
+  button{ padding:10px 16px; border-radius:10px; border:none; cursor:pointer; font-weight:600; box-shadow:0 4px 18px rgba(0,0,0,0.25); transition:transform .14s ease, box-shadow .14s ease; display:inline-flex; gap:8px; align-items:center; }
+  button:active{ transform:translateY(1px); }
 
-.clear-btn { background: #ff6b6b; }
-.clear-btn:hover { background: #e84141; }
+  .search-btn{ color:#fff; background-image:url('https://i.pinimg.com/originals/6a/a6/28/6aa6282c8998daf829d5c724e9f12a73.webp'); background-size:cover; background-position:center; background-repeat:no-repeat; padding-left:18px; padding-right:18px; min-width:110px; font-size:15px; text-shadow:0 1px 2px rgba(0,0,0,0.4); }
+  .search-btn:hover{ transform:scale(1.03); box-shadow:0 10px 24px rgba(0,0,0,0.35); }
+  .clear-btn{ background:rgba(255,107,107,0.95); color:#fff; background-image:url('https://img.freepik.com/premium-vector/cubic-grey-rock-stone-blocks-pattern-background_8071-10618.jpg'); background-size:cover; background-position:center; background-repeat:no-repeat; min-width:88px; }
+  .clear-btn:hover{ background:#e84141; }
 
-.results {
-  margin-top: 20px;
-  text-align: left;
-}
+  .results{ margin-top:18px; text-align:left; color:#fff; }
+  .section-title{ font-size:15px; margin:12px 0 8px; color:#fff; letter-spacing:0.2px; }
+  .definition, .translation { background: rgba(0,0,0,0.45); border-radius:10px; padding:10px; margin-bottom:8px; color:#fff; line-height:1.35; border:1px solid rgba(255,255,255,0.04); }
+  .translation{ display:flex; gap:10px; align-items:center; }
+  .translation img{ width:26px; height:16px; object-fit:cover; border-radius:3px; }
 
-.section-title {
-  font-size: 18px;
-  margin: 15px 0 10px;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 5px;
-  color: #fff;
-}
+  /* Floating menu */
+  .floating-menu{ position:fixed; top:20px; right:20px; z-index:1200; }
+  .menu-icon{ width:40px; height:40px; cursor:pointer; border-radius:8px; box-shadow:0 6px 20px rgba(0,0,0,0.4); background:#fff; display:block; }
+  .menu-panel{ position:fixed; top:70px; right:20px; background:var(--panel-bg); color:var(--panel-text); border-radius:8px; width:320px; max-height:80vh; overflow:auto; display:none; z-index:1199; }
+  .menu-panel.active{ display:block; }
+  .menu-panel-header{ padding:10px; font-weight:700; border-bottom:1px solid #eee; text-align:center; }
+  .menu-panel button{ width:100%; padding:10px; border:none; background:transparent; text-align:left; cursor:pointer; display:flex; gap:8px; align-items:center; color:var(--panel-text); }
+  .menu-panel button:hover{ background:rgba(0,0,0,0.04); }
+  .menu-content{ padding:8px 12px; font-size:14px; color:var(--panel-text); }
+  .menu-content ul{ padding-left:18px; margin:8px 0; }
+  .see-more-btn{ margin-top:8px; padding:8px 10px; border-radius:6px; background:#4facfe; color:#fff; border:none; cursor:pointer; }
 
-.translation, .definition {
-  background: #222;
-  padding: 10px;
-  border-radius: 10px;
-  margin-bottom: 10px;
-}
+  .loader-container{ display:flex; align-items:center; gap:10px; justify-content:flex-start; }
+  .loader-container img{ width:44px; height:44px; border-radius:50%; object-fit:cover; }
 
-.translation {
-  display: flex;
-  align-items: center;
-}
+  #statusIndicator{ position:fixed; bottom:15px; right:20px; background:rgba(0,0,0,0.7); color:#fff; font-size:13px; padding:8px 14px; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.3); z-index:1300; transition:background .2s ease; }
+  #statusIndicator.online{ background:rgba(40,167,69,0.85); }
+  #statusIndicator.offline{ background:rgba(220,53,69,0.85); }
 
-.translation img {
-  width: 28px;
-  height: 20px;
-  margin-right: 10px;
-  border-radius: 3px;
-  object-fit: cover;
-}
+  /* Student names list styling */
+  .name-item{ background:rgba(255,255,255,0.95); color:#111; border-radius:8px; padding:10px; margin-bottom:8px; border:1px solid rgba(0,0,0,0.06); }
+  .name-title{ font-weight:700; margin-bottom:6px; color:#1b1b1b; }
 
-/* Sidebar menu */
-.floating-menu {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
-}
-
-.menu-icon {
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  border-radius: 8px;
-  background: #fff;
-}
-
-.menu-panel {
-  position: fixed;
-  top: 70px;
-  right: 20px;
-  background: #fff;
-  border-radius: 8px;
-  width: 220px;
-  max-height: 80vh;
-  overflow-y: auto;
-  display: none;
-  flex-direction: column;
-  z-index: 999;
-  padding-bottom: 10px;
-}
-
-.menu-panel.active { display: flex; }
-
-.menu-panel-header {
-  font-weight: bold;
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-  text-align: center;
-}
-
-.menu-panel button {
-  background: transparent;
-  color: #000;
-  padding: 10px;
-  width: 100%;
-  text-align: left;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border: none;
-  cursor: pointer;
-}
-
-.menu-panel button:hover {
-  background: rgba(0,0,0,0.05);
-}
-
-.menu-panel img { width: 20px; height: 20px; }
-
-.menu-content {
-  padding: 5px 10px;
-  overflow-y: auto;
-}
-
-.menu-content ul { list-style: inside; padding-left: 0; margin: 0; }
-.menu-content li { padding: 3px 0; }
-
-.see-more-btn {
-  background: #4facfe;
-  margin-top: 10px;
-  width: auto;
-  border-radius: 6px;
-}
-
-.loader-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.loader-container img {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.loader-label {
-  margin-top: 5px;
-  color: #fff;
-}
-#statusIndicator {
-  position: fixed;
-  bottom: 15px;
-  right: 20px;
-  background: rgba(0, 0, 0, 0.7);
-  color: #fff;
-  font-size: 14px;
-  padding: 8px 14px;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.4);
-  z-index: 9999;
-  transition: background 0.3s;
-}
-
-#statusIndicator.online { background: rgba(40, 167, 69, 0.8); } /* Green */
-#statusIndicator.offline { background: rgba(220, 53, 69, 0.8); } /* Red */
-
+  @media (max-width:520px){
+    #wordInput{ width:100%; max-width:100%; }
+    .btn-container{ flex-direction:column; gap:8px; }
+    .container{ padding:18px; width:calc(100% - 36px); border-radius:12px; }
+    .menu-panel{ width:92vw; left:4vw; right:4vw; }
+  }
 </style>
 </head>
 <body>
 
 <!-- Floating Menu -->
 <div class="floating-menu">
-  <img src="https://creazilla-store.fra1.digitaloceanspaces.com/icons/3206632/menu-icon-md.png" 
-       class="menu-icon" onclick="toggleMenu()" alt="Menu Icon">
+  <img src="https://creazilla-store.fra1.digitaloceanspaces.com/icons/3206632/menu-icon-md.png" class="menu-icon" onclick="toggleMenu()" alt="Menu">
 </div>
 
-<!-- Sidebar Panel -->
-<div class="menu-panel" id="menuPanel">
+<!-- Menu Panel -->
+<div id="menuPanel" class="menu-panel" aria-hidden="true">
   <div class="menu-panel-header">Menu</div>
-  <button onclick="showHistoryInPanel()">
-    <img src="https://cdn-icons-png.flaticon.com/512/8373/8373545.png"> History
-  </button>
-  <button onclick="showWorkingWordsInPanel()">
-    <img src="https://www.nicepng.com/png/detail/309-3093011_notepad-pen-writing-pad-pencil-paper-icon-check.png"> Working Words
-  </button>
-  <div class="menu-content" id="menuContent">
-    <p style="text-align:center;color:#999;">Select a section</p>
-  </div>
+  <button onclick="showHistoryInPanel()"><img src="https://cdn-icons-png.flaticon.com/512/8373/8373545.png" style="width:18px;height:18px;margin-right:8px"> History</button>
+  <button onclick="showWorkingWordsInPanel()"><img src="https://www.nicepng.com/png/detail/309-3093011_notepad-pen-writing-pad-pencil-paper-icon-check.png" style="width:18px;height:18px;margin-right:8px"> Working Words</button>
+  <button onclick="showStudentNamesInPanel()"><img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" style="width:18px;height:18px;margin-right:8px"> Student Names</button>
+  <button onclick="showFunctionsFeatures()"><img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" style="width:18px;height:18px;margin-right:8px"> Functions & Features</button>
+  <div id="menuContent" class="menu-content"><p style="text-align:center;color:#666;margin:8px 0">Select a section</p></div>
 </div>
 
-<div class="container">
+<!-- Main container -->
+<div class="container" role="region" aria-label="ShaMbot Translator">
   <h1>ShaMbot Translator</h1>
-  <input type="text" id="wordInput" placeholder="Enter an English word...">
+
+  <input id="wordInput" type="text" placeholder="Enter an English word or a NAME (e.g. Martin)..." />
 
   <div class="btn-container">
-    <button class="search-btn" onclick="lookupWord()">Search</button>
-    <button class="clear-btn" onclick="clearResults()">Clear</button>
+    <button class="search-btn" onclick="lookupWord()">🔎 Search</button>
+    <button class="clear-btn" onclick="clearResults()">✖ Clear</button>
   </div>
 
-  <div id="results"></div>
+  <div id="results" class="results" role="status" aria-live="polite"></div>
 </div>
 
+<div id="statusIndicator" class="offline">🔴 Offline Mode</div>
+
 <script>
-// Hybrid Translation Database
-const translationDB = {
-  "Media": { "es": "Medios", "fr": "Médias", "de": "Medien", "ja": "メディア", "tl": "Midya" },
-  "Information": { "es": "Información", "fr": "Information", "de": "Information", "ja": "情報", "tl": "Impormasyon" },
-  "Literacy": { "es": "Alfabetización", "fr": "Littératie", "de": "Alphabetisierung", "ja": "リテラシー", "tl": "Kakayahan sa Pagbasa" },
-  "Digital": { "es": "Digital", "fr": "Numérique", "de": "Digital", "ja": "デジタル", "tl": "Digital" },
-  "Communication": { "es": "Comunicación", "fr": "Communication", "de": "Kommunikation", "ja": "コミュニケーション", "tl": "Komunikasyon" },
-  "Book": { "es": "Libro", "fr": "Livre", "de": "Buch", "ja": "本", "tl": "Aklat" },
-  "House": { "es": "Casa", "fr": "Maison", "de": "Haus", "ja": "家", "tl": "Bahay" },
-  "Love": { "es": "Amor", "fr": "Amour", "de": "Liebe", "ja": "愛", "tl": "Pag-ibig" },
-  "Computer": { "es": "Computadora", "fr": "Ordinateur", "de": "Computer", "ja": "コンピュータ", "tl": "Kompyuter" },
-  "Food": { "es": "Comida", "fr": "Nourriture", "de": "Essen", "ja": "食べ物", "tl": "Pagkain" }
+/* -------------------- Name database (as provided) -------------------- */
+const nameDB = {
+  "AGUILAR": { "definition": "The official class representative of **Eagle-Eyed Perfection**. They notice everything: misplaced commas, forgotten assignments, and who's sleeping in the back row.", "es": "El Que Vigila La Siesta", "fr": "L'Aigle Du Doute", "de": "Der Adler der Pünktlichkeit", "ja": "見張り番長", "tl": "" },
+  "BACUSA": { "definition": "A rare condition where one cannot function without having their phone charger within a 3-foot radius. Often suffers from **Low-Battery Anxiety**.", "es": "Batería Baja Emergencia", "fr": "Le Câble Oublié", "de": "Die Ladegerät-Panik", "ja": "充電切れの恐怖", "tl": "Kung maingay si Micabalo hindi papatalo to!" },
+  "DELA CRUZ": { "definition": "The legendary family that must carry **every burden** for the entire group, including the group project, the presentation, and the mental load of their classmates.", "es": "El Cargador Supremo", "fr": "Le Porteur de Malheur Amical", "de": "Der Freiwillige Sündenbock", "ja": "全部お任せ係", "tl": "Multo ng ABM 3" },
+  "GAON": { "definition": "Derived from the ancient Tagalog word meaning **'The one who always knows what's up.'** Likely to have finished the entire season of a show before you even started Episode 1.", "es": "El Spoiler Andante", "fr": "L'Omniscient", "de": "Der Wissensträger", "ja": "流行の神様", "tl": "Kainez naman tong tao nato" },
+  "MADENAÑIL": { "definition": "Possesses a highly coveted skill: the ability to find a quiet, unbothered spot on a crowded campus to **take a nap**... and actually wake up on time.", "es": "El Maestro del Sueño", "fr": "La Dormeuse Stratégique", "de": "Die Nickerchen-Königin", "ja": "昼寝のプロ", "tl": "Ang Tulog-Mantika" },
+  "TABAÑAG": { "definition": "This surname means **'The Final Boss'** of the class. Highly respected, minimally spoken, and probably has a hidden stash of perfect study notes.", "es": "El Jefe Silencioso", "fr": "La Légende Oubliée", "de": "Der Schweigsame Gigant", "ja": "秘密の賢者", "tl": "Anak ni Ma'am Tabia" },
+  "MALVAZ": { "definition": "A state of supreme, **unbothered chill**. Cannot be stressed, cannot be hurried, and cannot be convinced to care about deadlines before they are absolutely due.", "es": "El Zen Maestro", "fr": "L'Indifférence Royale", "de": "Die Entspannungs-Blase", "ja": "究極ののんびり", "tl": "Ang Walang Pake" },
+  "BARDELOZA": { "definition": "The ability to perfectly mimic the handwriting or signature of any teacher or parent. Also known as **'The Master Forger of Attendance Sheets.'**", "es": "El Falsificador de Excuses", "fr": "Le Maître du Pinceau", "de": "Der Unterschriften-Ninja", "ja": "筆跡の達人", "tl": "Ang Siga sa Pirma" },
+  "JIMENEZ": { "definition": "A person whose primary function is to **acquire snacks** for the group. They possess an unnerving ability to find the nearest store, regardless of distance or curfew.", "es": "El Explorador de Golosinas", "fr": "Le Chasseur de Goûter", "de": "Der Essens-Detektiv", "ja": "お菓子調達係", "tl": "Ang Dakilang Tagapag-Abot ng Junk Food" },
+  "PERMEJO": { "definition": "Named after the phenomenon where a person's bag, desk, or locker holds a **near-infinite amount of unnecessary but occasionally useful items**, like a sewing kit and three half-eaten sandwiches.", "es": "La Bolsa Sin Fondo", "fr": "Le Trésor de Poche", "de": "Der Mysteriöse Rucksack", "ja": "何でも出てくる人", "tl": "Bisayawa" },
+  "SAPLAD": { "definition": "The student who always seems to **walk by just as a minor disaster happens** (someone trips, a ball breaks a window, the printer jams). They are never the cause, only the witness.", "es": "El Imán de Problemas Ajeno", "fr": "Le Témoin Involontaire", "de": "Der Unschuldige Zeuge", "ja": "事件に遭遇する係", "tl": "Maligno bayun o Kapre?" },
+  "ASTROLOGO": { "definition": "Someone who uses the stars, planetary alignment, or a well-shuffled deck of cards to determine **if they should even bother studying** for the next exam. (The stars usually say 'no').", "es": "El Horóscopo Estudiantil", "fr": "La Dame des Prédictions Paresseuses", "de": "Die Sternen-Entscheiderin", "ja": "運勢頼り", "tl": "Presidente ng Pilipinas" },
+  "CLETE": { "definition": "The person with the **most specific and intricate coffee order** known to man. It involves at least three syrups, two types of milk, and a very confused barista.", "es": "El Ritual del Café Complejo", "fr": "L'Exigeante de la Mousse", "de": "Die Kaffeebesteller-Diva", "ja": "カフェの王様", "tl": "Ang May 'Special' na Kape" },
+  "LUCEÑO": { "definition": "An honorary title given to the individual who keeps the group chat alive with **non-stop memes, GIFs, and slightly inappropriate jokes** that make everyone forget they have homework.", "es": "El Generador de Distracciones", "fr": "La Lumière de l'Hilarité", "de": "Die Meme-Maschine", "ja": "笑いの爆弾", "tl": "Ang Taga-Patawa sa Chat" },
+  "QUIBOD": { "definition": "A term describing someone who can **sleep anywhere, at any time, in any position**, often defying gravity or anatomy. Requires only 3 square inches of space and a dream.", "es": "El Contorsionista Dormilón", "fr": "L'Experte du Sommeil Vertical", "de": "Der Schlafwandler im Sitzen", "ja": "いつでもどこでも寝る人", "tl": "Ang Higa-Pader" },
+  "BELLO": { "definition": "Spanish for 'beautiful' or 'handsome.' However, in class, it translates to 'The one who always asks the **one extra question** just as the teacher is about to dismiss the class.'", "es": "El 'Una Pregunta Más' (El Bello)", "fr": "Le Procrastinateur de Question", "de": "Der Letzte-Frage-Steller", "ja": "帰れない質問家", "tl": "Ang 'Wait Lang Po' sa Dismissal" },
+  "BRIZ": { "definition": "A person whose primary form of communication is a **single, highly expressive eyebrow raise**. Can convey disbelief, judgment, or confusion without ever saying a word.", "es": "El Ceja-Maestro", "fr": "Le Sourcil Parlant", "de": "Der Augenbrauen-Bote", "ja": "ジェスチャーの神", "tl": "Asawa ng Presidente ng ABM3" },
+  "BUSA": { "definition": "A highly specific, made-up unit of measurement. One **BUSA** is equal to the amount of time it takes to sprint from your chair to the cafeteria before the line gets long.", "es": "El Corredor del Almuerzo", "fr": "L'Éclair de Cantine", "de": "Der Kantinen-Sprinter", "ja": "昼食ダッシュの英雄", "tl": "Dancer yarn?" },
+  "CANDELARIO": { "definition": "The individual who is always prepared for a dramatic, power-outage-level emergency. Carries a small flashlight, emergency snacks, and knows the **nearest exit route** at all times.", "es": "El Prevencionista Dramático", "fr": "Le Gardien des Lumières", "de": "Der Notfall-Sheriff", "ja": "危機管理の達人", "tl": "BFF SI SIR!!" },
+  "DELA PACION": { "definition": "A dedicated passion for a single, **highly obscure hobby** (e.g., collecting rare bottle caps, competitive finger-painting). Will discuss it at length if prompted.", "es": "El Monotema Apasionado", "fr": "L'Expert En Niche", "de": "Der Nischen-Enthusiast", "ja": "オタクの情熱", "tl": "Ang Obsessed sa Kanyang Trip(Estacio)" },
+  "MAGAT": { "definition": "Possesses the uncanny ability to **perfectly imitate the teacher's voice** when reading notes, making homework instructions sound like a stand-up routine.", "es": "El Impostor de Voces", "fr": "Le Double Vocale", "de": "Der Stimmen-Imitator", "ja": "声帯模写の名人", "tl": "Nen User" },
+  "MALLILLIN": { "definition": "The person who always has a **deadly accurate prediction** about the pop quiz or the sudden change in schedule, but everyone ignores them until it's too late.", "es": "El Oráculo Ignorado", "fr": "Le Cassandre de la Classe", "de": "Der Wahrsager der Noten", "ja": "予言者なのに無視される人", "tl": "BATAK SA 69 DAYS" },
+  "MARTIN": { "definition": "A social butterfly who is somehow friends with **every single clique** in the class, regardless of how incompatible they are. The ultimate class diplomat.", "es": "El Mediador Universal", "fr": "Le Connecteur Social", "de": "Der Gruppen-Überbrücker", "ja": "全グループの友達", "tl": "Ang Kapit sa Lahat" },
+  "MICABALO": { "definition": "Member of the Fox Academy, The most Loudest in the classroom.", "es": "El Fantasma del Aula", "fr": "La Vanish Inexpliquée", "de": "Der Unsichtbarkeits-Champion", "ja": "瞬間移動の術", "tl": "ML ML? Notes wala??" },
+  "PARAGAS": { "definition": "A person whose desk is permanently organized into a **fortress of textbooks and folders**, designed to repel unwanted glances and borrowed pens.", "es": "La Fortaleza de Papel", "fr": "Le Mur Anti-Triche", "de": "Der Schreibtisch-Architekt", "ja": "要塞の構築者", "tl": "Kay TABAÑAG lang" },
+  "RAMA": { "definition": "The only person who still insists on using **multicolored gel pens and scented erasers**, making their notes smell vaguely of fruit and childhood.", "es": "El Cromático Perfumado", "fr": "Le Styliste des Notes", "de": "Der Duft-Stift-Künstler", "ja": "香りの筆記具コレクター", "tl": "Ang Pabango sa Notebook" },
+  "SAN DIEGO": { "definition": "Principal ng Fox Academy, Second Voice", "fr": "Le Contestataire Éloquent", "de": "Der Feilscher um Noten", "ja": "点数交渉人", "tl": "Basta maingay😭" },
+  "TAPEL": { "definition": "The student who always speaks like an AI", "fr": "Le Collectionneur de Fournitures", "de": "Der Versorgungs-Plünderer", "ja": "文房具を要求する人", "tl": "AI NG ABM3" },
+  "ALNAJES": { "definition": "Seryoso sa room, pa baby kila Trixie HAHHAHAHA", "fr": "Le Casque de Protection", "de": "Der Kopfhörer-Wächter", "ja": "触れられたくない人", "tl": "Asawa ni Barky" },
+  "ASUNCION": { "definition": "The belief that if you simply **'assume'** the answer on a multiple-choice test, you'll be correct. A tribute to optimism over actual studying.", "es": "La Fe Ciega en la C", "fr": "La Dame de la Chance", "de": "Die Rate-Expertin", "ja": "推測で生きる者", "tl": "Ang Bahala Na sa Pagsagot" },
+  "BARQUILLA": { "definition": "Diko alam basta si BARKY, BARKY, BARKY!.", "es": "El Sensible de Azúcar", "fr": "Le Petit Gâteau", "de": "Die Zerbrechliche Seele", "ja": "豆腐メンタル", "tl": "Asawa ni Alnajes" },
+  "BORREROS": { "definition": "Tahimik pero MAGILAGID SA ROOM.", "es": "El Estómago Clamoroso", "fr": "Le Ventre Grondant", "de": "Der Hungeralarm", "ja": "腹の虫が鳴く人", "tl": "Umay sayo Marcelino!!" },
+  "BUNYI": { "definition": "The **human sound-effects machine**. Everything they do—walking, chewing, breathing—is accompanied by a dramatic noise that can be heard three rows away.", "es": "El Generador de Ruido", "fr": "Le Bruitiste", "de": "Der Lärm-Künstler", "ja": "音響効果担当", "tl": "Ang Ingay 'Pag Gumalaw" },
+  "CAFE": { "definition": "A person whose energy level is directly proportional to their **caffeine intake**. Without it, they move at the speed of a sloth reading a very long contract.", "es": "El Adicto al Espresso", "fr": "Le Moteur à Caféine", "de": "Die Kaffee-Batterie", "ja": "カフェイン依存症", "tl": "Ang Hindi Gumagana Kapag Walang Kape" },
+  "CAMBOD": { "definition": "The uncanny ability to **perfectly dodge** the teacher's gaze when they are looking for a volunteer to answer a question or run an errand.", "es": "El Escondedor Profesional", "fr": "L'Évite-Regard", "de": "Der Augenkontakt-Vermeider", "ja": "視線よけの名人", "tl": "Uwi kana boi!" },
+  "DEFENSOR": { "definition": "The unofficial **class lawyer**. Will fiercely defend a friend's terrible argument or weak excuse with impressive, albeit completely baseless, logic.", "es": "El Abogado Defensor Sin Licencia", "fr": "Le Protecteur Juri-Comique", "de": "Der Unbezahlte Anwalt", "ja": "正義の味方 (自己流)", "tl": "Baby ni Denmark" },
+  "DELA PEÑA": { "definition": "Means **'of the rock.'** A nickname for the person who is emotionally solid and utterly unreadable, often staring blankly while plotting their next move.", "es": "La Cara de Piedra", "fr": "La Roche Imperturbable", "de": "Die Pokerface-Königin", "ja": "無表情の天才", "tl": "Ang Tombits ng ABM3" },
+  "ENRIQUEZ": { "definition": "The student whose backpack contains what appears to be **an entire mobile office supply store**. If you need it, they have it (stapler, tape, printer ink, etc.).", "es": "La Tienda de Suministros Ambulante", "fr": "La Librairie Portable", "de": "Der Schulbedarf-Shop", "ja": "持ち運び文具店", "tl": "Ang May Lahat" },
+  "ESPINOSA": { "definition": "The one who always carries a jacket or sweater, even in the hottest weather, because they have a personal, **permanent cold front** surrounding them.", "es": "La Reina del Frío", "fr": "Le Refuge Froid", "de": "Der Eingeborene Frost", "ja": "寒がり屋", "tl": "Sandwich Bendor" },
+  "ESTACIO": { "definition": "The master of the **delayed reaction**. Takes 10 seconds longer than everyone else to get the joke, but their laugh is always the loudest and most genuine.", "es": "La Risa Retardada", "fr": "Le Comique Lent", "de": "Der Nachzügler-Lacher", "ja": "遅れてくる笑い", "tl": "Ang 'Ah Ngayon Ko Lang Nakuha' na Tawa" },
+  "GECOMO": { "definition": "Possesses a highly dramatic laugh that sounds less like a bodily function and more like **an elderly, disgruntled goat** screaming into a megaphone.", "es": "El Estornudo de Cabra", "fr": "L'Éternuement Théâtral", "de": "Das Ziegen-Niesen", "ja": "ヤギのくしゃみ", "tl": "Ang pahigop ang tawa" },
+  "INION": { "definition": "A rare condition: **Hyper-Focus Disorder**. When studying, they can block out a marching band, a thunderstorm, and the entire class gossiping next to them.", "es": "El Túnel de Concentración", "fr": "La Zone Intouchable", "de": "Der Fokus-Meister", "ja": "究極の集中力", "tl": "Ang Walang-Naririnig" },
+  "LAPITAN": { "definition": "The only person who still insists on **running up to the board** to erase, even when they're sitting in the back row. A high-energy exhibitionist.", "es": "El Corredor de la Pizarra", "fr": "Le Sprinteur de Tableau", "de": "Der Tafel-Marathonläufer", "ja": "黒板ダッシュ", "tl": "Love Birds ng ABM3" },
+  "LIANGCO": { "definition": "A person whose primary state of being is **'hangry'** (hungry + angry). Their mood improves by 70% immediately upon receiving food.", "es": "El Mal Humor del Hambre", "fr": "La Faim Hostile", "de": "Die Hunger-Laune", "ja": "空腹で怒る人", "tl": "Ang Gutom na Masungit" },
+  "MAGLASANG": { "definition": "The individual who is always slightly (or entirely) **off-topic**. Their contributions in group discussions always start with 'That reminds me of...' a completely unrelated subject.", "es": "El Desviador de Tema", "fr": "Le Détourneur de Conversation", "de": "Der Themen-Nomade", "ja": "話の脱線王", "tl": "Hindi ka tatahimik teh?" },
+  "MONASTRIAL": { "definition": "A person with the **MONAStic discipline** to actually wake up on their first alarm, turn off the lights by 9 PM, and never procrastinate. (A true legend).", "es": "La Disciplina Milagrosa", "fr": "Le Moine de la Ponctualité", "de": "Der Frühaufsteher-Heilige", "ja": "完璧な生活習慣", "tl": "Ang Sobrang Maaga" },
+  "NUGUIT": { "definition": "The student who somehow manages to **'nudge'** their chair, pencil, or foot into yours every 30 seconds, regardless of how much personal space you take up.", "es": "El Tocador Incesante", "fr": "Le Petit Pousseur", "de": "Der Ständige Anstoßer", "ja": "ちょいちょい触る人", "tl": "Ang Laging Nakaka-Sagi" },
+  "OLETA": { "definition": "The person who always has the **best, most organized notes**, but when you try to copy them, their handwriting looks like ancient alien hieroglyphics.", "es": "El Jeroglífico Perfecto", "fr": "L'Écriture Illisible", "de": "Die Unentzifferbare Schrift", "ja": "読めない天才", "tl": "Ang Sulat-Doktor" },
+  "OROYAN": { "definition": "A rare student who actually **remembers their own password** on the first try, every time. A technological genius among a class of password-reset victims.", "es": "La Memoria de Contraseñas", "fr": "Le Code-Génie", "de": "Der Passwort-Meister", "ja": "パスワード記憶王", "tl": "Ang Hindi Nakakalimot ng Password" },
+  "PANDOY": { "definition": "The person who always manages to be **the last one out the door**, even if they started packing 15 minutes before the bell. Moves at a glacial, unhurried pace.", "es": "El Caracol de la Salida", "fr": "La Tortue de la Classe", "de": "Der Langsame Abgänger", "ja": "一番最後に出る人", "tl": "Ang Sobrang Bagal" },
+  "PASILAN": { "definition": "MIYEMBRO NG FOX ACADEMY, NAHAWA SA KAINGAYAN NI MICABALO AT SAN DIEGO", "fr": "Le Fuyard de Tâche", "de": "Der Lasten-Schieber", "ja": "責任転嫁のプロ", "tl": "PASTILAN" },
+  "PONCE": { "definition": "Named after the fountain of youth. This person is **eternally cheerful and bouncy**, even at 7:00 AM on a Monday, which is deeply suspicious.", "es": "La Eterna Felicidad", "fr": "La Source de Joie Suspecte", "de": "Die Montag-Morgen-Freude", "ja": "疑わしいほど陽気", "tl": "Love Birds ng ABM3" },
+  "QUINTOS": { "definition": "A person who always manages to make a simple situation **five times more complicated** than it needs to be, usually through over-explaining or excessive steps.", "es": "El Complicador Cinco Estrellas", "fr": "L'Exagérateur", "de": "Der Komplikations-Künstler", "ja": "複雑にする名人", "tl": "Printer ng ABM3" },
+  "RICAFORT": { "definition": "The one who always says they're **too poor to buy snacks** but somehow owns the newest, most expensive gadget or limited-edition shoes.", "es": "El Pobre Millonario", "fr": "La Richesse Secrète", "de": "Der Geheime Investor", "ja": "隠された富豪", "tl": "Mapera to" },
+  "ROXAS": { "definition": "The master of the **unnoticed bathroom break**. Can exit and re-enter the classroom with the stealth and speed of a highly trained ninja.", "es": "El Ninja del Baño", "fr": "La Disparition Instantanée", "de": "Der Toiletten-Spion", "ja": "ステルスの達人", "tl": "Yuweh???" },
+  "RUIZ": { "definition": "The person who seems to **float through the school year** without studying, yet consistently manages to pass everything with the bare minimum required score.", "es": "El Mínimo Esfuerzo Máximo Resultado", "fr": "Le Survivant Chanceux", "de": "Der Glücks-Absolvent", "ja": "ギリギリの天才", "tl": "Cute daw sabi niya.." },
+  "TINAAN": { "definition": "A verb describing the act of **silently judging** everyone else's chaotic life choices while maintaining a facade of perfect serenity.", "es": "El Juez Silencioso", "fr": "Le Juge Sans Voix", "de": "Der Stille Beobachter", "ja": "心の声が大きい人", "tl": "May pinaka mabigat na kamay sa ABM3" },
+  "VILLAGEN": { "definition": "The person who, for one brief, shining moment during a class debate, **becomes fiercely competitive**, then immediately returns to being extremely passive.", "es": "La Competencia Flash", "fr": "L'Éruption de Compétitivité", "de": "Der Sekunden-Kämpfer", "ja": "瞬間的に本気を出す人", "tl": "Ang May 'Biglang Bawi' na Sigla" },
+  "RESIDUO": { "definition": "The esteemed educator whose primary skill is identifying the **'residue' of knowledge** left in your brain after a lecture. She measures your effort by the sad, leftover crumbs of information you retained.", "es": "La Creadora de Sobrantes", "fr": "Le Reste d'Évaluation", "de": "Die Restwissen-Prüferin", "ja": "残りの知識の女王", "tl": "Ang Taga-Kolekta ng Kulang" },
+  "SHANLEY": { "definition": "Tagalista ng maingay ng ABM 3 at Cute", "tl": "Mukhang laging galet pero pa Baby kay.." , "es": "La Lista Ruidosa", "fr": "La Liste Bruyante", "de": "Die Lautstärke-Liste", "ja": "騒がしいリスト" }
 };
 
+/* -------------------- Working words DB (basic + academic words) -------------------- */
+const wordDB = {
+  "Media": { "es": "Medios", "fr": "Médias", "de": "Medien", "ja": "メディア", "tl": "Midya", "definition":"Channels or tools used to store and deliver information or data." },
+  "Information": { "es": "Información", "fr": "Information", "de": "Information", "ja": "情報", "tl": "Impormasyon", "definition":"Facts provided or learned about something or someone." },
+  "Literacy": { "es": "Alfabetización", "fr": "Littératie", "de": "Alphabetisierung", "ja": "リテラシー", "tl": "Kakayahan sa Pagbasa", "definition":"The ability to read and write." },
+  "Digital": { "es": "Digital", "fr": "Numérique", "de": "Digital", "ja": "デジタル", "tl": "Digital", "definition":"Involving or relating to computers or computer systems." },
+  "Communication": { "es": "Comunicación", "fr": "Communication", "de": "Kommunikation", "ja": "コミュニケーション", "tl": "Komunikasyon", "definition":"The act of exchanging information by speaking, writing, or using some other medium." },
+  "Book": { "es": "Libro", "fr": "Livre", "de": "Buch", "ja": "本", "tl": "Aklat", "definition":"A set of printed pages bound together." },
+  "House": { "es": "Casa", "fr": "Maison", "de": "Haus", "ja": "家", "tl": "Bahay", "definition":"A building for human habitation." },
+  "Love": { "es": "Amor", "fr": "Amour", "de": "Liebe", "ja": "愛", "tl": "Pag-ibig", "definition":"An intense feeling of deep affection." },
+  "Computer": { "es": "Computadora", "fr": "Ordinateur", "de": "Computer", "ja": "コンピュータ", "tl": "Kompyuter", "definition":"An electronic device for storing and processing data." },
+  "Food": { "es": "Comida", "fr": "Nourriture", "de": "Essen", "ja": "食べ物", "tl": "Pagkain", "definition":"Any nutritious substance that people or animals eat or drink." },
+
+  /* academic / school-oriented words */
+  "assignment": { "es":"tarea","fr":"devoir","de":"Aufgabe","ja":"課題","tl":"takdang-aralin","definition":"A task given to students to complete." },
+  "lecture": { "es":"clase","fr":"cours","de":"Vorlesung","ja":"講義","tl":"lektyur","definition":"An educational talk to an audience, especially students." },
+  "syllabus": { "es":"programa","fr":"syllabus","de":"Lehrplan","ja":"シラバス","tl":"silabus","definition":"An outline of the subjects in a course." },
+  "curriculum": { "es":"currículo","fr":"programme d'études","de":"Lehrplan","ja":"カリキュラム","tl":"kurikulum","definition":"The subjects comprising a course of study." },
+  "quiz": { "es":"prueba corta","fr":"interrogation","de":"Kurztest","ja":"小テスト","tl":"maliit na pagsusulit","definition":"A short test." },
+  "exam": { "es":"examen","fr":"examen","de":"Prüfung","ja":"試験","tl":"eksamen","definition":"A formal test of a person's knowledge or proficiency." },
+  "research": { "es":"investigación","fr":"recherche","de":"Forschung","ja":"研究","tl":"pananaliksik","definition":"Systematic investigation to establish facts." },
+  "project": { "es":"proyecto","fr":"projet","de":"Projekt","ja":"プロジェクト","tl":"proyekto","definition":"A planned piece of work." },
+  "presentation": { "es":"presentación","fr":"présentation","de":"Präsentation","ja":"発表","tl":"presentasyon","definition":"The act of presenting information to an audience." },
+  "attendance": { "es":"asistencia","fr":"présence","de":"Anwesenheit","ja":"出席","tl":"pagdalo","definition":"The fact of being present." },
+  "schedule": { "es":"horario","fr":"horaire","de":"Zeitplan","ja":"スケジュール","tl":"iskedyul","definition":"A plan for carrying out a process or procedure." },
+  "subject": { "es":"asignatura","fr":"matière","de":"Fach","ja":"科目","tl":"paksa","definition":"An area of knowledge studied in school." },
+  "module": { "es":"módulo","fr":"module","de":"Modul","ja":"モジュール","tl":"module","definition":"A unit of a course or curriculum." },
+  "grade": { "es":"nota","fr":"note","de":"Note","ja":"成績","tl":"grado","definition":"A score or mark given for schoolwork." }
+};
+
+/* languages */
 const languages = {
   "es": { name: "Spanish", flag: "https://flagcdn.com/es.svg" },
   "fr": { name: "French", flag: "https://flagcdn.com/fr.svg" },
@@ -270,139 +226,171 @@ const languages = {
   "tl": { name: "Filipino", flag: "https://flagcdn.com/ph.svg" }
 };
 
+/* state */
 const wordInput = document.getElementById('wordInput');
 const resultsDiv = document.getElementById('results');
 const menuPanel = document.getElementById('menuPanel');
 const menuContent = document.getElementById('menuContent');
 let historyList = JSON.parse(localStorage.getItem("shambotHistory")) || [];
-const wordsList = Object.keys(translationDB);
 
-// Capitalize input
+/* prepare lists */
+const wordsList = Object.keys(wordDB).sort((a,b)=>a.localeCompare(b));
+const namesList = Object.keys(nameDB).sort((a,b)=>a.localeCompare(b));
+
+/* keyboard + input */
+wordInput.addEventListener('keydown', e => { if(e.key === "Enter") lookupWord(); });
 wordInput.addEventListener('input', () => {
   let val = wordInput.value;
-  if(val.length > 0) wordInput.value = val.charAt(0).toUpperCase() + val.slice(1).toLowerCase();
+  if(val.length > 0) wordInput.value = val.charAt(0).toUpperCase() + val.slice(1);
 });
 
-// Press Enter to search
-wordInput.addEventListener('keydown', e => { if(e.key === "Enter") lookupWord(); });
-
-// Toggle sidebar
+/* toggle menu */
 function toggleMenu(){ menuPanel.classList.toggle('active'); }
 
-// Main lookup
-async function lookupWord(){
-  const word = wordInput.value.trim();
-  if(!word){ resultsDiv.innerHTML="<p>Please type a word.</p>"; return; }
+/* show history */
+function showHistoryInPanel(){
+  const items = historyList.length ? historyList.map(w => `<li>${w}</li>`).join("") : "<li>No history yet</li>";
+  menuContent.innerHTML = `<div><strong>Search History</strong><ul style="margin-top:8px">${items}</ul></div>`;
+}
 
-  // Add to history if new
-  if(!historyList.includes(word)) {
-    historyList.push(word);
+/* show working words (words DB only) */
+function showWorkingWordsInPanel(){
+  let content = `<div><strong>Working Words (Basic & Academic)</strong><div style="margin-top:8px">`;
+  content += "<ul>";
+  for(const w of wordsList){
+    content += `<li>${w} — ${wordDB[w].definition || ""}</li>`;
+  }
+  content += "</ul></div></div>";
+  menuContent.innerHTML = content;
+}
+
+/* show student names (all names + defs) */
+function showStudentNamesInPanel(){
+  let content = `<div><strong>Student Names</strong><div style="margin-top:10px">`;
+  for(const n of namesList){
+    const entry = nameDB[n];
+    const tl = entry.tl || "";
+    const def = entry.definition || "";
+    content += `<div class="name-item"><div class="name-title">${n}</div><div><em>${def}</em></div>`;
+    if(tl) content += `<div style="margin-top:6px;"><strong>Filipino:</strong> ${tl}</div>`;
+    content += `</div>`;
+  }
+  content += `</div></div>`;
+  menuContent.innerHTML = content;
+}
+
+/* show functions & features */
+function showFunctionsFeatures(){
+  menuContent.innerHTML = `<div>
+    <h3 style="color:#4facfe;text-align:center;margin-top:0">🌍 Functions and Features</h3>
+    <p style="color:#333; text-align:justify; margin-top:8px">The ShaMbot Translator serves as an interactive web-based tool that allows users to search for unique and humorous definitions of names, along with translations in multiple languages such as Spanish, French, German, Japanese, and Tagalog. It features a user-friendly search bar where users can type any English word or name to instantly view its definition and corresponding translations displayed in a neat, scrollable results area.</p>
+    <p style="color:#333; text-align:justify">The site design highlights creativity and usability, featuring a stylish animated background, floating menu for easy navigation, and visually appealing buttons inspired by custom textures and images. Users can access features like <strong>History</strong> and <strong>Working Words</strong>, enhancing their experience by allowing quick review of previous searches. The ShaMbot Translator combines functionality and fun with a clean layout that reflects modern web design aesthetics.</p>
+  </div>`;
+}
+
+/* lookup: tries local DBs first (names, then words), else uses dictionary API for common words and MyMemory for translations */
+async function lookupWord(){
+  const raw = (wordInput.value||"").trim();
+  if(!raw){ resultsDiv.innerHTML = "<div style='color:#ffdede'>Please type a word or name.</div>"; return; }
+  const keyUpper = raw.toUpperCase();
+
+  // add to history (store user typed)
+  if(!historyList.includes(raw)) {
+    historyList.push(raw);
     localStorage.setItem("shambotHistory", JSON.stringify(historyList));
   }
 
-  resultsDiv.innerHTML = `<div class="loader-container">
-    <img src="https://media.giphy.com/media/ppSjX2iP9Ec1ExJRsV/giphy.gif">
-    <div class="loader-label">Loading...</div>
-  </div>`;
+  resultsDiv.innerHTML = `<div class="loader-container"><img src="https://media.giphy.com/media/ppSjX2iP9Ec1ExJRsV/giphy.gif" alt="loading"><div style="color:#fff">Loading...</div></div>`;
 
-  let output = "";
-
-  // --- Definition ---
-  try {
-    if (navigator.onLine) {
-      const dictRes = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
-      if (dictRes.ok) {
-        const dictData = await dictRes.json();
-        const meaning = dictData[0]?.meanings[0]?.definitions[0]?.definition || "No definition found.";
-        const phonetic = dictData[0]?.phonetic || "";
-        output += `<div class="section-title">📖 Definition</div>
-                   <div class="definition"><b>${word}</b> ${phonetic?`(${phonetic})`:""}: ${meaning}</div>`;
-      } else throw new Error();
-    } else {
-      output += `<div class="section-title">📖 Definition</div>
-                 <div class="definition">Offline mode: No definition available.</div>`;
+  // If it's in nameDB -> show name definition + translations from nameDB (if present)
+  if(nameDB[keyUpper]){
+    const entry = nameDB[keyUpper];
+    let output = `<div class="section-title">📖 Name Definition</div><div class="definition">${entry.definition || "No definition."}</div>`;
+    output += `<div class="section-title">🌍 Translations (from name DB)</div>`;
+    for(const [code,info] of Object.entries(languages)){
+      const val = entry[code] || "Translation unavailable";
+      output += `<div class="translation"><img src="${info.flag}" alt="${info.name}"><div><b>${info.name}:</b> ${val}</div></div>`;
     }
-  } catch {
-    output += `<div class="section-title">📖 Definition</div>
-               <div class="definition">Definition unavailable.</div>`;
+    resultsDiv.innerHTML = output;
+    updateStatusIndicator();
+    return;
   }
 
-  // --- Translations ---
-  output += `<div class="section-title">🌍 Translations</div>`;
-  for (const [code, info] of Object.entries(languages)) {
-    let translated = translationDB[word]?.[code] || "";
+  // If it's in wordDB -> show definition + translations (from wordDB)
+  if(wordDB[raw] || wordDB[keyUpper]){
+    const key = wordDB[raw] ? raw : keyUpper;
+    const wentry = wordDB[key] || wordDB[keyUpper] || {};
+    let output = `<div class="section-title">📖 Definition</div><div class="definition">${wentry.definition || "Definition not found."}</div>`;
+    output += `<div class="section-title">🌍 Translations</div>`;
+    for(const [code,info] of Object.entries(languages)){
+      const val = wentry[code] || (wentry[code] === "" ? "" : (wentry[code] || "Translation unavailable"));
+      output += `<div class="translation"><img src="${info.flag}" alt="${info.name}"><div><b>${info.name}:</b> ${val || "Translation unavailable"}</div></div>`;
+    }
+    resultsDiv.innerHTML = output;
+    updateStatusIndicator();
+    return;
+  }
 
-    // Try online API if missing locally
-    if (!translated && navigator.onLine) {
-      try {
-        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=en|${code}`);
+  // Otherwise attempt dictionary API for definition and MyMemory for translations (if online)
+  let output = "";
+  try {
+    if(navigator.onLine){
+      // Dictionary API for definitions
+      const dictRes = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(raw.toLowerCase())}`);
+      if(dictRes.ok){
+        const dictData = await dictRes.json();
+        const meaning = dictData[0]?.meanings?.[0]?.definitions?.[0]?.definition || "No definition found.";
+        const phonetic = dictData[0]?.phonetic || "";
+        output += `<div class="section-title">📖 Definition</div><div class="definition"><b>${raw}</b> ${phonetic?`(${phonetic})`:''}: ${meaning}</div>`;
+      } else {
+        output += `<div class="section-title">📖 Definition</div><div class="definition">Definition unavailable.</div>`;
+      }
+    } else {
+      output += `<div class="section-title">📖 Definition</div><div class="definition">Definition unavailable (offline) — try a working word from the Working Words list.</div>`;
+    }
+  } catch(err){
+    output += `<div class="section-title">📖 Definition</div><div class="definition">Definition unavailable (error).</div>`;
+  }
+
+  // translations via local fallback + MyMemory if online
+  output += `<div class="section-title">🌍 Translations</div>`;
+  for(const [code,info] of Object.entries(languages)){
+    let translated = "";
+    // try wordDB local translation first
+    if(wordDB[raw] && wordDB[raw][code]) translated = wordDB[raw][code];
+    // else try MyMemory if online
+    if(!translated && navigator.onLine){
+      try{
+        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(raw)}&langpair=en|${code}`);
         const data = await res.json();
         translated = data?.responseData?.translatedText?.trim() || "";
-        if (!translated || translated.toLowerCase() === word.toLowerCase()) throw new Error();
-      } catch {
-        translated = "Translation unavailable due to system limits";
-      }
+        if(translated.toLowerCase() === raw.toLowerCase()) translated = "";
+      }catch(e){ translated = ""; }
     }
-
-    if (!translated) translated = "Translation unavailable due to system limits";
-
-    output += `<div class="translation">
-                 <img src="${info.flag}" alt="${info.name} flag">
-                 <div><b>${info.name}:</b> ${translated}</div>
-               </div>`;
+    if(!translated) translated = "Translation unavailable";
+    output += `<div class="translation"><img src="${info.flag}" alt="${info.name}"><div><b>${info.name}:</b> ${translated}</div></div>`;
   }
 
   resultsDiv.innerHTML = output;
   updateStatusIndicator();
 }
 
-// Clear results
-function clearResults(){
-  wordInput.value = "";
-  resultsDiv.innerHTML = "";
-  wordInput.focus();
-}
+/* clear */
+function clearResults(){ wordInput.value=""; resultsDiv.innerHTML=""; wordInput.focus(); }
 
-// Show History
-function showHistoryInPanel(){
-  const items = historyList.length
-    ? historyList.map(w => `<li>${w}</li>`).join("")
-    : "<li>No history yet</li>";
-  menuContent.innerHTML = `<ul>${items}</ul>`;
-}
-
-// Show Working Words
-function showWorkingWordsInPanel(){
-  const firstThree = wordsList.slice(0,3);
-  let content = "<ul>" + firstThree.map(w => `<li>${w}</li>`).join("") + "</ul>";
-  if(wordsList.length > 3){
-    content += `<button class="see-more-btn" onclick="showMoreWorkingWords()">See More</button>`;
-  }
-  menuContent.innerHTML = content;
-}
-
-function showMoreWorkingWords(){
-  menuContent.innerHTML = "<ul>" + wordsList.map(w => `<li>${w}</li>`).join("") + "</ul>";
-}
-
-// --- Status Indicator ---
-function updateStatusIndicator() {
+/* status indicator */
+function updateStatusIndicator(){
   const indicator = document.getElementById("statusIndicator");
-  if (!indicator) return;
-  if (navigator.onLine) {
-    indicator.textContent = "🟢 Online Mode";
-    indicator.classList.remove("offline");
-    indicator.classList.add("online");
-  } else {
-    indicator.textContent = "🔴 Offline Mode";
-    indicator.classList.remove("online");
-    indicator.classList.add("offline");
-  }
+  if(!indicator) return;
+  if(navigator.onLine){ indicator.textContent = "🟢 Online Mode"; indicator.classList.remove("offline"); indicator.classList.add("online"); }
+  else { indicator.textContent = "🔴 Offline Mode"; indicator.classList.remove("online"); indicator.classList.add("offline"); }
 }
-
 window.addEventListener("online", updateStatusIndicator);
 window.addEventListener("offline", updateStatusIndicator);
 updateStatusIndicator();
+
+/* initialize menu default content */
+menuContent.innerHTML = `<p style="text-align:center;color:#666;margin:8px 0">Select a section</p>`;
 </script>
 
 </body>
