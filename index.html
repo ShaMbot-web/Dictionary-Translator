@@ -5,34 +5,35 @@
 <title>🌍 ShaMbot Translator — Full DB + Student Names</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <style>
-  :root { --panel-bg: rgba(255,255,255,0.98); --panel-text:#111; }
-
-  html,body {
+   html,body{
     height:100%;
     margin:0;
     font-family:"Segoe UI",Arial,sans-serif;
-    background:#111;
-  }
-
-  /* ✅ Fixed: use background-image instead of background-video */
-  body {
+    background-image: url('https://media.giphy.com/media/IzS27RYNWGnp2GZal7/giphy.gif'); /* ✅ working animated GIF */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     display:flex;
     align-items:center;
     justify-content:center;
     padding:24px;
-    background-image: url('background.png'); /* ← change this to your image file */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
   }
 
   .container{
-    width:560px; max-width:calc(100% - 48px); max-height:92vh; overflow:auto;
-    border-radius:14px; box-shadow:0 0 40px rgba(0,0,0,0.6); padding:28px;
-    color:#fff; position:relative; text-align:center;
-    background-image:url('https://wallpapercave.com/wp/wp9822772.jpg');
-    background-size:cover; background-position:center; background-repeat:no-repeat;
+    width:560px;
+    max-width:calc(100% - 48px);
+    max-height:92vh;
+    overflow:auto;
+    border-radius:14px;
+    box-shadow:0 0 40px rgba(0,0,0,0.6);
+    padding:28px;
+    color:#fff;
+    text-align:center;
+    background:rgba(0,0,0,0.55);
+    backdrop-filter: blur(6px);
   }
+
 
   h1{ margin:0 0 12px 0; font-size:22px; color:#ffb6c1; }
 
@@ -395,5 +396,4 @@ menuContent.innerHTML = `<p style="text-align:center;color:#666;margin:8px 0">Se
 
 </body>
 </html>
-
 
